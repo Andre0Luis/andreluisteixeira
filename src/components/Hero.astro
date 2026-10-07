@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+import profile from '../assets/profile.jpg';
+import { useTranslations, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { hero } = useTranslations(locale);
+---
+
+<section id="about" class="mx-auto max-w-6xl px-5 pb-20 pt-16 sm:pt-24">
+  <div class="grid items-center gap-12 md:grid-cols-[1fr_auto]">
+    <div>
+      <p class="eyebrow">{hero.role}</p>
+      <h1 class="mt-4 text-5xl font-semibold tracking-tight sm:text-6xl">{hero.name}</h1>
+      <p class="mt-5 font-mono text-lg text-accent">&ldquo;{hero.signature}&rdquo;</p>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{hero.bio}</p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href="#projects"
+          class="rounded-lg bg-fg px-5 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+        >
+          {hero.ctaProjects}
+        </a>
+        <a
+          href="#contact"
+          class="rounded-lg border border-line-strong px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface"
+        >
+          {hero.ctaContact}
+        </a>
+      </div>
+    </div>
+
+    <div class="mx-auto md:mx-0">
+      <Image
+        src={profile}
+        alt={hero.photoAlt}
+        widths={[224, 288, 448, 576]}
+        sizes="(min-width: 640px) 288px, 224px"
+        loading="eager"
+        fetchpriority="high"
+        class="aspect-[4/5] w-56 rounded-2xl border border-line object-cover sm:w-72"
+      />
+    </div>
+  </div>
+</section>

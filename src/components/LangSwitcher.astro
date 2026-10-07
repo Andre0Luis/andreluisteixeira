@@ -1,0 +1,34 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { locales, localeNames, useTranslations, type Locale } from '../i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<nav aria-label={t.a11y.language} class="flex items-center gap-0.5 rounded-lg border border-line bg-surface p-0.5">
+  {
+    locales.map((l) => {
+      const active = l === locale;
+      return (
+        <a
+          href={getRelativeLocaleUrl(l) + '#'}
+          hreflang={useTranslations(l).htmlLang}
+          lang={useTranslations(l).htmlLang}
+          title={localeNames[l].full}
+          aria-current={active ? 'true' : undefined}
+          class:list={[
+            'rounded-md px-2.5 py-1 font-mono text-xs transition-colors',
+            active ? 'bg-surface-2 text-fg' : 'text-muted hover:text-fg',
+          ]}
+        >
+          {localeNames[l].short}
+        </a>
+      );
+    })
+  }
+</nav>

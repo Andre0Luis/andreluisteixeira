@@ -1,0 +1,41 @@
+---
+import { links, useTranslations, type Locale } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { contact } = useTranslations(locale);
+
+const rows = [
+  { label: 'GitHub', value: 'github.com/Andre0Luis', href: links.github },
+  { label: 'LinkedIn', value: 'linkedin.com/in/andreluisteixeira', href: links.linkedin },
+  { label: 'Instagram', value: '@andre_lsta', href: links.instagram },
+  { label: contact.emailLabel, value: links.email, href: `mailto:${links.email}` },
+];
+---
+
+<section id="contact" class="border-t border-line bg-surface/40 py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <SectionHead eyebrow={contact.eyebrow} title={contact.title} lead={contact.text} />
+
+    <ul class="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
+      {
+        rows.map((row) => (
+          <li>
+            <a
+              href={row.href}
+              {...(row.href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+              class="flex items-center justify-between gap-4 px-5 py-4 transition-colors hover:bg-surface-2"
+            >
+              <span class="font-mono text-xs uppercase tracking-[0.18em] text-muted">{row.label}</span>
+              <span class="truncate text-fg">{row.value}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

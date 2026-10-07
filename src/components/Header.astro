@@ -1,0 +1,88 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+import LangSwitcher from './LangSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const items = [
+  { id: 'about', label: t.nav.about },
+  { id: 'journey', label: t.nav.journey },
+  { id: 'engineering', label: t.nav.engineering },
+  { id: 'projects', label: t.nav.projects },
+  { id: 'education', label: t.nav.education },
+  { id: 'outside', label: t.nav.outside },
+  { id: 'contact', label: t.nav.contact },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+  <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5">
+    <a href="#about" class="font-medium tracking-tight text-fg">André Luis Teixeira</a>
+
+    <nav aria-label={t.a11y.mainNav} class="hidden items-center gap-5 lg:flex">
+      {
+        items.map((i) => (
+          <a href={`#${i.id}`} data-nav={i.id} class="text-sm text-muted transition-colors hover:text-fg aria-[current=true]:text-fg">
+            {i.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <LangSwitcher locale={locale} />
+      <details class="group relative lg:hidden">
+        <summary
+          class="flex h-9 cursor-pointer list-none items-center rounded-lg border border-line bg-surface px-3 font-mono text-xs text-muted marker:hidden [&::-webkit-details-marker]:hidden"
+        >
+          {t.a11y.menu}
+        </summary>
+        <nav
+          aria-label={t.a11y.mainNav}
+          class="absolute right-0 mt-2 flex w-52 flex-col rounded-xl border border-line bg-surface p-2 shadow-2xl"
+        >
+          {
+            items.map((i) => (
+              <a
+                href={`#${i.id}`}
+                data-menu-link
+                class="rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2 hover:text-fg"
+              >
+                {i.label}
+              </a>
+            ))
+          }
+        </nav>
+      </details>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Fecha o menu móvel ao escolher um link e marca a seção visível no menu.
+  document.querySelectorAll<HTMLAnchorElement>('[data-menu-link]').forEach((a) =>
+    a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
+  );
+
+  const links = new Map<string, HTMLElement>();
+  document.querySelectorAll<HTMLElement>('[data-nav]').forEach((el) => links.set(el.dataset.nav!, el));
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        links.forEach((el, id) => el.setAttribute('aria-current', String(id === entry.target.id)));
+      }
+    },
+    { rootMargin: '-35% 0px -60% 0px' },
+  );
+  links.forEach((_, id) => {
+    const section = document.getElementById(id);
+    if (section) observer.observe(section);
+  });
+</script>
