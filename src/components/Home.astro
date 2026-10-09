@@ -3,13 +3,18 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Hero from './Hero.astro';
 import CardGrid from './CardGrid.astro';
+import Journey from './Journey.astro';
+import Engineering from './Engineering.astro';
+import Stack from './Stack.astro';
 import SectionHead from './SectionHead.astro';
 import Education from './Education.astro';
+import OutsideTeaser from './OutsideTeaser.astro';
 import Contact from './Contact.astro';
 import Footer from './Footer.astro';
-import Projects from './Projects.vue';
-import OutsideTabs from './OutsideTabs.vue';
+import Projects from './vue/Projects.vue';
 import { useTranslations, type Locale } from '../i18n';
+import { extras } from '../i18n/content/extras';
+import { urls } from '../i18n/urls';
 
 interface Props {
   locale: Locale;
@@ -17,16 +22,17 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
+const ex = extras[locale];
 ---
 
-<Base locale={locale}>
+<Base locale={locale} page="home">
   <a
     href="#main"
     class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-fg focus:px-4 focus:py-2 focus:text-bg"
   >
     {t.a11y.skip}
   </a>
-  <Header locale={locale} />
+  <Header locale={locale} page="home" />
 
   <main id="main">
     <Hero locale={locale} />
@@ -39,32 +45,29 @@ const t = useTranslations(locale);
       tone="raised"
     />
 
-    <CardGrid id="journey" eyebrow={t.journey.eyebrow} title={t.journey.title} items={t.journey.blocks} numbered={false} />
+    <Journey locale={locale} />
+    <Engineering locale={locale} />
+    <Stack locale={locale} />
 
-    <CardGrid
-      id="engineering"
-      eyebrow={t.engineering.eyebrow}
-      title={t.engineering.title}
-      items={t.engineering.pillars}
-      tone="raised"
-    />
-
-    <section id="projects" class="border-t border-line py-20">
+    <section id="projects" class="border-t border-line bg-surface/40 py-20">
       <div class="mx-auto max-w-6xl px-5">
         <SectionHead eyebrow={t.projects.eyebrow} title={t.projects.title} />
-        <Projects client:visible items={t.projects.items} label={t.projects.selectLabel} />
+        <Projects client:visible items={t.projects.items} label={t.projects.selectLabel} flip={ex.flip} />
+        <p class="mt-6">
+          <a
+            href={urls.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="font-mono text-sm text-accent underline-offset-4 hover:underline"
+          >
+            {t.projects.more} <span aria-hidden="true">&nearr;</span>
+          </a>
+        </p>
       </div>
     </section>
 
     <Education locale={locale} />
-
-    <section id="outside" class="border-t border-line bg-surface/40 py-20">
-      <div class="mx-auto max-w-6xl px-5">
-        <SectionHead eyebrow={t.outside.eyebrow} title={t.outside.title} />
-        <OutsideTabs client:visible tabs={t.outside.tabs} label={t.outside.tabsLabel} />
-      </div>
-    </section>
-
+    <OutsideTeaser locale={locale} />
     <Contact locale={locale} />
   </main>
 

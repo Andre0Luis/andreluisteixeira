@@ -2,48 +2,113 @@
 import { Image } from 'astro:assets';
 import profile from '../assets/profile.jpg';
 import { useTranslations, type Locale } from '../i18n';
+import { extras } from '../i18n/content/extras';
+import Topo from './art/Topo.astro';
+import HeroTerminal from './vue/HeroTerminal.vue';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const { hero } = useTranslations(locale);
+const { hero, htmlLang } = useTranslations(locale);
+const ex = extras[locale];
+
+// "5+" vira número 5 e sufixo "+", para o contador animar só a parte numérica.
+const facts = hero.facts.map((f) => ({
+  ...f,
+  to: Number.parseInt(f.value, 10),
+  suffix: f.value.replace(/^\d+/, ''),
+}));
 ---
 
-<section id="about" class="mx-auto max-w-6xl px-5 pb-20 pt-16 sm:pt-24">
-  <div class="grid items-center gap-12 md:grid-cols-[1fr_auto]">
-    <div>
-      <p class="eyebrow">{hero.role}</p>
-      <h1 class="mt-4 text-5xl font-semibold tracking-tight sm:text-6xl">{hero.name}</h1>
-      <p class="mt-5 font-mono text-lg text-accent">&ldquo;{hero.signature}&rdquo;</p>
-      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{hero.bio}</p>
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a
-          href="#projects"
-          class="rounded-lg bg-fg px-5 py-2.5 text-sm font-medium text-bg transition-opacity hover:opacity-90"
+<section id="about" class="relative overflow-hidden">
+  <div class="glow pointer-events-none absolute inset-0" aria-hidden="true"></div>
+  <div class="topo-wrap pointer-events-none absolute -right-40 -top-32 w-[56rem] max-w-none text-accent opacity-60 sm:-right-20" data-mouse="-22" aria-hidden="true">
+    <Topo seed={1.3} />
+  </div>
+  <div class="topo-wrap pointer-events-none absolute -bottom-72 -left-64 w-[42rem] max-w-none text-line-strong opacity-50" data-mouse="14" aria-hidden="true">
+    <Topo seed={4.1} rings={12} />
+  </div>
+
+  <div class="relative mx-auto max-w-6xl px-5 pb-16 pt-14 sm:pt-20">
+    <div class="grid items-center gap-14 md:grid-cols-[1fr_auto]">
+      <div class="reveal">
+        <p
+          class="inline-flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl border border-line bg-surface/80 px-3.5 py-2 font-mono text-xs text-muted backdrop-blur sm:rounded-full sm:py-1.5"
         >
-          {hero.ctaProjects}
-        </a>
-        <a
-          href="#contact"
-          class="rounded-lg border border-line-strong px-5 py-2.5 text-sm font-medium transition-colors hover:bg-surface"
-        >
-          {hero.ctaContact}
-        </a>
+          <span class="inline-flex items-center gap-2 text-fg">
+            <span class="live-dot" aria-hidden="true"></span>
+            {hero.status}
+          </span>
+          <span class="hidden text-line-strong sm:inline" aria-hidden="true">/</span>
+          <span>{hero.location}</span>
+        </p>
+
+        <h1 class="mt-6 text-5xl font-semibold tracking-tight sm:text-6xl lg:text-7xl">{hero.name}</h1>
+        <p class="mt-4 font-mono text-lg text-accent sm:text-xl">
+          <span class="cursor">&ldquo;{hero.signature}&rdquo;</span>
+        </p>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{hero.bio}</p>
+
+        <ul class="mt-6 flex max-w-2xl flex-wrap gap-2" aria-label={hero.role}>
+          {hero.focus.map((f) => <li class="chip">{f}</li>)}
+        </ul>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="#projects" class="btn btn-solid">
+            {hero.ctaProjects}
+            <span aria-hidden="true">&darr;</span>
+          </a>
+          <a href="#contact" class="btn btn-outline">{hero.ctaContact}</a>
+        </div>
+      </div>
+
+      <div class="reveal relative mx-auto pb-8 md:mx-0 md:pb-44" style="--d: 140ms">
+        <div data-tilt="7" class="relative">
+          <div
+            class="absolute -inset-3 rounded-3xl border border-line/70 [mask-image:linear-gradient(to_bottom_right,#000,transparent_70%)]"
+            aria-hidden="true"
+          >
+          </div>
+          <Image
+            src={profile}
+            alt={hero.photoAlt}
+            widths={[224, 288, 448, 576]}
+            sizes="(min-width: 640px) 288px, 224px"
+            loading="eager"
+            fetchpriority="high"
+            class="relative aspect-[4/5] w-56 rounded-2xl border border-line object-cover sm:w-72"
+          />
+        </div>
+        <div class="absolute bottom-0 -left-6 hidden w-80 md:block lg:-left-28">
+          <div class="min-h-[15rem]">
+            <HeroTerminal client:idle title={ex.terminal.title} lines={ex.terminal.lines} />
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="mx-auto md:mx-0">
-      <Image
-        src={profile}
-        alt={hero.photoAlt}
-        widths={[224, 288, 448, 576]}
-        sizes="(min-width: 640px) 288px, 224px"
-        loading="eager"
-        fetchpriority="high"
-        class="aspect-[4/5] w-56 rounded-2xl border border-line object-cover sm:w-72"
-      />
-    </div>
+    <dl
+      class="reveal mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line lg:grid-cols-4"
+      style="--d: 220ms"
+    >
+      {
+        facts.map((f) => (
+          <div class="flex flex-col bg-surface px-5 py-5" data-spot>
+            <dd
+              class="font-mono text-3xl font-semibold tracking-tight text-fg"
+              data-count-to={f.to}
+              data-suffix={f.suffix}
+              data-locale={htmlLang}
+              data-plain="true"
+            >
+              {f.value}
+            </dd>
+            <dt class="mt-1 text-sm text-muted">{f.label}</dt>
+          </div>
+        ))
+      }
+    </dl>
   </div>
 </section>

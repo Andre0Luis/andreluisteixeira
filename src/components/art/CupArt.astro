@@ -1,0 +1,21 @@
+---
+// Xícara minimalista com vapor animado.
+interface Props {
+  class?: string;
+}
+
+const { class: cls = '' } = Astro.props;
+---
+
+<svg viewBox="0 0 240 220" class={cls} fill="none" aria-hidden="true">
+  <g class="steam" stroke="#9bb8d3" stroke-width="3" stroke-linecap="round">
+    <path d="M92 74c-10-12 10-22 0-36" />
+    <path d="M122 80c-12-14 12-26 0-44" />
+    <path d="M152 74c-10-12 10-22 0-36" />
+  </g>
+  <ellipse cx="120" cy="196" rx="92" ry="10" fill="#14171c" stroke="#2a2f38" />
+  <path d="M52 96h136v50c0 30-24 50-68 50s-68-20-68-50V96Z" fill="#1a1e25" stroke="#3a414d" stroke-width="2" />
+  <path d="M188 112h14c16 0 16 38 0 38h-18" stroke="#3a414d" stroke-width="2" />
+  <ellipse cx="120" cy="96" rx="68" ry="9" fill="#2a1a10" stroke="#3a414d" stroke-width="2" />
+  <ellipse cx="108" cy="95" rx="30" ry="3.5" fill="#4a2e1a" opacity="0.7" />
+</svg>

@@ -1,6 +1,7 @@
 import { pt } from './pt';
 import { en } from './en';
 import { es } from './es';
+import { urls } from './urls';
 import type { Dict, Locale } from './types';
 
 export type { Dict, Locale };
@@ -20,8 +21,8 @@ export function useTranslations(locale: Locale): Dict {
 }
 
 export const links = {
-  github: 'https://github.com/Andre0Luis',
-  linkedin: 'https://www.linkedin.com/in/andreluisteixeira/',
-  instagram: 'https://www.instagram.com/andre_lsta/',
+  github: urls.github,
+  linkedin: urls.linkedin,
+  instagram: urls.instagram,
   email: 'contato@andreluisteixeira.dev',
 } as const;

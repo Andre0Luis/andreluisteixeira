@@ -1,0 +1,74 @@
+---
+// Serras em camadas, com parallax por rolagem, mais um céu de estrelas.
+interface Props {
+  class?: string;
+}
+
+const { class: cls = '' } = Astro.props;
+
+const W = 1440;
+const H = 900;
+
+function layer(base: number, amp: number, seed: number, f: number) {
+  const pts: string[] = [];
+  for (let x = 0; x <= W; x += 12) {
+    const ridged =
+      0.6 * (1 - Math.abs(Math.sin(x * 0.0042 * f + seed))) ** 1.4 +
+      0.3 * (1 - Math.abs(Math.sin(x * 0.0108 * f + seed * 2.3))) ** 1.6 +
+      0.1 * Math.sin(x * 0.034 + seed);
+    pts.push(`${x},${(base - amp * ridged).toFixed(1)}`);
+  }
+  return `M0,${H}L${pts.join('L')}L${W},${H}Z`;
+}
+
+const layers = [
+  { d: layer(560, 330, 1.1, 1.0), fill: '#222a37', speed: 0.05 },
+  { d: layer(650, 290, 3.4, 1.15), fill: '#1a212b', speed: 0.09 },
+  { d: layer(740, 230, 5.9, 1.3), fill: '#131820', speed: 0.14 },
+  { d: layer(830, 150, 8.2, 1.5), fill: '#0d0f12', speed: 0.2 },
+];
+
+const stars = Array.from({ length: 52 }, (_, i) => ({
+  x: (((i * 97.13) % 1) * W + ((i * 53) % 29)) % W,
+  y: ((i * 61.7) % 1) * 330 + ((i * 17) % 40) + 20,
+  r: 0.7 + ((i * 7) % 5) * 0.3,
+  delay: ((i * 13) % 40) / 10,
+}));
+---
+
+<div class={cls} aria-hidden="true">
+  <svg viewBox={`0 0 ${W} ${H}`} class="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMax slice">
+    <g>
+      {stars.map((s) => <circle cx={s.x} cy={s.y} r={s.r} fill="#cfd8e3" class="star" style={`animation-delay:${s.delay}s`} />)}
+    </g>
+  </svg>
+  {
+    layers.map((l) => (
+      <svg
+        viewBox={`0 0 ${W} ${H}`}
+        class="ridge absolute inset-x-0 bottom-0 h-full w-full"
+        preserveAspectRatio="xMidYMax slice"
+        data-speed={l.speed}
+      >
+        <path d={l.d} fill={l.fill} />
+      </svg>
+    ))
+  }
+</div>
+
+<style>
+  .star {
+    animation: twinkle 3.6s ease-in-out infinite;
+    opacity: 0.75;
+  }
+  @keyframes twinkle {
+    50% {
+      opacity: 0.15;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .star {
+      animation: none;
+    }
+  }
+</style>

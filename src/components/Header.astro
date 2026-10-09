@@ -1,42 +1,74 @@
 ---
 import { useTranslations, type Locale } from '../i18n';
+import { pageUrl, type PageId } from '../i18n/routes';
 import LangSwitcher from './LangSwitcher.astro';
 
 interface Props {
   locale: Locale;
+  page?: PageId;
 }
 
-const { locale } = Astro.props;
+const { locale, page = 'home' } = Astro.props;
 const t = useTranslations(locale);
+const onHome = page === 'home';
 
-const items = [
+const anchors = [
   { id: 'about', label: t.nav.about },
   { id: 'journey', label: t.nav.journey },
   { id: 'engineering', label: t.nav.engineering },
+  { id: 'stack', label: t.nav.stack },
   { id: 'projects', label: t.nav.projects },
   { id: 'education', label: t.nav.education },
-  { id: 'outside', label: t.nav.outside },
   { id: 'contact', label: t.nav.contact },
 ];
+
+const pages = [
+  { id: 'mountains' as const, label: t.nav.mountains },
+  { id: 'coffee' as const, label: t.nav.coffee },
+];
+
+// Na home, âncoras da própria página; nas outras páginas, links de volta à home.
+const items = onHome
+  ? anchors.map((a) => ({ ...a, href: `#${a.id}`, nav: a.id }))
+  : [
+      { id: 'home', label: t.nav.home, href: pageUrl(locale, 'home'), nav: undefined },
+      { id: 'contact', label: t.nav.contact, href: pageUrl(locale, 'home', 'contact'), nav: undefined },
+    ];
 ---
 
-<header class="sticky top-0 z-40 border-b border-line bg-bg/85 backdrop-blur-md">
+<header class="sticky top-0 z-40 border-b border-line bg-bg/80 backdrop-blur-md">
   <div class="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5">
-    <a href="#about" class="font-medium tracking-tight text-fg">André Luis Teixeira</a>
+    <a href={pageUrl(locale, 'home')} class="font-medium tracking-tight text-fg">André Luis Teixeira</a>
 
-    <nav aria-label={t.a11y.mainNav} class="hidden items-center gap-5 lg:flex">
+    <nav aria-label={t.a11y.mainNav} class="hidden items-center gap-4 xl:flex">
       {
         items.map((i) => (
-          <a href={`#${i.id}`} data-nav={i.id} class="text-sm text-muted transition-colors hover:text-fg aria-[current=true]:text-fg">
+          <a
+            href={i.href}
+            data-nav={i.nav}
+            class="text-sm text-muted transition-colors hover:text-fg aria-[current=true]:text-fg"
+          >
             {i.label}
+          </a>
+        ))
+      }
+      <span class="h-4 w-px bg-line" aria-hidden="true"></span>
+      {
+        pages.map((p) => (
+          <a
+            href={pageUrl(locale, p.id)}
+            aria-current={page === p.id ? 'page' : undefined}
+            class="rounded-md border border-line px-2.5 py-1 text-sm text-fg transition-colors hover:border-accent aria-[current=page]:border-accent aria-[current=page]:bg-accent/10"
+          >
+            {p.label}
           </a>
         ))
       }
     </nav>
 
     <div class="flex items-center gap-2">
-      <LangSwitcher locale={locale} />
-      <details class="group relative lg:hidden">
+      <LangSwitcher locale={locale} page={page} />
+      <details class="group relative xl:hidden">
         <summary
           class="flex h-9 cursor-pointer list-none items-center rounded-lg border border-line bg-surface px-3 font-mono text-xs text-muted marker:hidden [&::-webkit-details-marker]:hidden"
         >
@@ -44,16 +76,24 @@ const items = [
         </summary>
         <nav
           aria-label={t.a11y.mainNav}
-          class="absolute right-0 mt-2 flex w-52 flex-col rounded-xl border border-line bg-surface p-2 shadow-2xl"
+          class="absolute right-0 mt-2 flex w-56 flex-col rounded-xl border border-line bg-surface p-2 shadow-2xl"
         >
           {
             items.map((i) => (
-              <a
-                href={`#${i.id}`}
-                data-menu-link
-                class="rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2 hover:text-fg"
-              >
+              <a href={i.href} data-menu-link class="rounded-lg px-3 py-2 text-sm text-muted hover:bg-surface-2 hover:text-fg">
                 {i.label}
+              </a>
+            ))
+          }
+          <span class="my-1 h-px bg-line" aria-hidden="true"></span>
+          {
+            pages.map((p) => (
+              <a
+                href={pageUrl(locale, p.id)}
+                data-menu-link
+                class="rounded-lg px-3 py-2 text-sm text-fg hover:bg-surface-2"
+              >
+                {p.label}
               </a>
             ))
           }
@@ -64,7 +104,7 @@ const items = [
 </header>
 
 <script>
-  // Fecha o menu móvel ao escolher um link e marca a seção visível no menu.
+  // Fecha o menu móvel ao escolher um link e marca a seção visível (só na home).
   document.querySelectorAll<HTMLAnchorElement>('[data-menu-link]').forEach((a) =>
     a.addEventListener('click', () => a.closest('details')?.removeAttribute('open')),
   );
@@ -72,17 +112,19 @@ const items = [
   const links = new Map<string, HTMLElement>();
   document.querySelectorAll<HTMLElement>('[data-nav]').forEach((el) => links.set(el.dataset.nav!, el));
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const entry of entries) {
-        if (!entry.isIntersecting) continue;
-        links.forEach((el, id) => el.setAttribute('aria-current', String(id === entry.target.id)));
-      }
-    },
-    { rootMargin: '-35% 0px -60% 0px' },
-  );
-  links.forEach((_, id) => {
-    const section = document.getElementById(id);
-    if (section) observer.observe(section);
-  });
+  if (links.size) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          links.forEach((el, id) => el.setAttribute('aria-current', String(id === entry.target.id)));
+        }
+      },
+      { rootMargin: '-35% 0px -60% 0px' },
+    );
+    links.forEach((_, id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+  }
 </script>

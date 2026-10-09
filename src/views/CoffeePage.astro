@@ -1,0 +1,120 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Contact from '../components/Contact.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Topo from '../components/art/Topo.astro';
+import CupArt from '../components/art/CupArt.astro';
+import BrewLab from '../components/vue/BrewLab.vue';
+import ExtractionLab from '../components/vue/ExtractionLab.vue';
+import { useTranslations, type Locale } from '../i18n';
+import { coffee } from '../i18n/content/coffee';
+import { extras } from '../i18n/content/extras';
+import { pageUrl } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const c = coffee[locale];
+const ex = extras[locale];
+---
+
+<Base locale={locale} page="coffee" title={c.meta.title} description={c.meta.description}>
+  <Header locale={locale} page="coffee" />
+
+  <main id="main">
+    <!-- Abertura -->
+    <section class="relative isolate overflow-hidden border-b border-line">
+      <div class="absolute inset-0 -z-10 bg-gradient-to-b from-[#16120f] via-bg to-bg"></div>
+      <div class="topo-wrap pointer-events-none absolute -right-48 -top-24 -z-10 w-[52rem] max-w-none text-[#c89b6a] opacity-25" data-mouse="-18" aria-hidden="true">
+        <Topo seed={2.6} rings={14} />
+      </div>
+
+      <div class="mx-auto grid max-w-6xl items-center gap-12 px-5 pb-20 pt-16 md:grid-cols-[1.2fr_1fr] sm:pt-24">
+        <div class="reveal">
+          <p class="eyebrow">{c.hero.eyebrow}</p>
+          <h1 class="mt-4 text-5xl font-semibold tracking-tight sm:text-7xl">{c.hero.title}</h1>
+          <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">{c.hero.lead}</p>
+          <ul class="mt-6 flex flex-wrap gap-2">
+            {c.hero.chips.map((chip) => <li class="chip">{chip}</li>)}
+          </ul>
+          <dl class="mt-8 grid max-w-md grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line">
+            {
+              c.stats.map((s) => (
+                <div class="flex flex-col bg-surface px-5 py-4" data-spot>
+                  <dd class="font-mono text-3xl font-semibold" data-count-to={s.to} data-locale={t.htmlLang}>
+                    {s.to}
+                  </dd>
+                  <dt class="mt-1 text-xs leading-snug text-muted">{s.label}</dt>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <div class="reveal relative mx-auto w-full max-w-sm" style="--d: 120ms">
+          <div class="absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,rgb(200_155_106/0.18),transparent_65%)]" aria-hidden="true"></div>
+          <div data-tilt="8">
+            <CupArt class="w-full" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Laboratório de receita -->
+    <section class="py-20">
+      <div class="mx-auto max-w-6xl px-5">
+        <SectionHead eyebrow={c.lab.eyebrow} title={c.lab.title} lead={c.lab.lead} />
+        <BrewLab client:visible t={c.lab} />
+      </div>
+    </section>
+
+    <!-- Extração -->
+    <section class="border-t border-line bg-surface/40 py-20">
+      <div class="mx-auto max-w-6xl px-5">
+        <SectionHead eyebrow={c.extraction.eyebrow} title={c.extraction.title} lead={c.extraction.lead} />
+        <ExtractionLab client:visible t={c.extraction} />
+      </div>
+    </section>
+
+    <!-- Café vira código -->
+    <section class="border-t border-line py-20">
+      <div class="mx-auto max-w-6xl px-5">
+        <a
+          href={pageUrl(locale, 'home', 'projects')}
+          class="card reveal group grid items-center gap-6 md:grid-cols-[1fr_auto]"
+        >
+          <div>
+            <p class="eyebrow">{c.app.eyebrow}</p>
+            <h2 class="mt-2 text-3xl font-semibold tracking-tight">{c.app.title}</h2>
+            <p class="mt-3 max-w-2xl leading-relaxed text-muted">{c.app.text}</p>
+          </div>
+          <span class="inline-flex items-center gap-2 text-sm text-fg">
+            {c.app.cta}
+            <span class="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">&rarr;</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Convite -->
+    <section class="border-t border-line bg-surface/40 py-20">
+      <div class="reveal mx-auto max-w-3xl px-5 text-center">
+        <h2 class="text-3xl font-semibold tracking-tight sm:text-4xl">{c.cta.title}</h2>
+        <p class="mt-4 text-lg text-muted">{c.cta.text}</p>
+        <div class="mt-8 flex flex-wrap justify-center gap-3">
+          <a href="#contact" class="btn btn-solid">{ex.ui.contactCta}</a>
+          <a href={pageUrl(locale, 'mountains')} class="btn btn-outline">{c.cta.mountains} <span aria-hidden="true">&rarr;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <Contact locale={locale} />
+  </main>
+
+  <Footer locale={locale} />
+</Base>

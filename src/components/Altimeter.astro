@@ -1,0 +1,48 @@
+---
+// Altímetro fixo: a altitude sobe conforme a página é lida, até a altura do Roraima.
+interface Props {
+  label: string;
+  unit: string;
+  max: number;
+  htmlLang: string;
+}
+
+const { label, unit, max, htmlLang } = Astro.props;
+const ticks = Array.from({ length: 11 }, (_, i) => i);
+---
+
+<aside
+  data-altimeter
+  data-max={max}
+  data-locale={htmlLang}
+  class="pointer-events-none fixed bottom-4 right-4 z-30 xl:bottom-auto xl:left-auto xl:right-5 xl:top-1/2 xl:-translate-y-1/2"
+  aria-hidden="true"
+>
+  <!-- Celular: pílula compacta -->
+  <div class="flex items-baseline gap-2 rounded-full border border-line bg-bg/85 px-3.5 py-1.5 font-mono text-xs backdrop-blur xl:hidden">
+    <span class="text-muted">{label}</span>
+    <span class="tabular-nums text-fg"><span data-alt-value>0</span> {unit}</span>
+  </div>
+
+  <!-- Desktop: régua vertical -->
+  <div class="hidden h-72 items-stretch gap-3 xl:flex">
+    <div class="flex flex-col items-end justify-between py-0.5 font-mono text-[10px] text-muted">
+      <span>{max.toLocaleString(htmlLang)}</span>
+      <span>0</span>
+    </div>
+    <div class="relative w-5">
+      <span class="absolute inset-y-0 right-0 w-px bg-line-strong"></span>
+      {
+        ticks.map((i) => (
+          <span class="absolute right-0 h-px bg-line-strong" style={`bottom:${i * 10}%;width:${i % 5 === 0 ? 14 : 7}px`}></span>
+        ))
+      }
+      <div class="alt-marker absolute right-0 translate-x-1/2 translate-y-1/2" style="transition: bottom 0.15s linear">
+        <span class="block size-3 rounded-full border-2 border-bg bg-accent shadow-[0_0_0_4px_rgb(155_184_211/0.2)]"></span>
+        <span class="absolute right-5 top-1/2 -translate-y-1/2 whitespace-nowrap rounded-md border border-line bg-bg/90 px-2 py-1 font-mono text-xs tabular-nums text-fg backdrop-blur">
+          <span data-alt-value>0</span> {unit}
+        </span>
+      </div>
+    </div>
+  </div>
+</aside>

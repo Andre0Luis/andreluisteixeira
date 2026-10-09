@@ -15,6 +15,8 @@
   --color-fg: #e7e9ec;
   --color-muted: #9aa3af;
   --color-accent: #9bb8d3;
+  --color-live: #7fd1a8;
+  --color-bad: #e49a8f;
 }
 
 @layer base {
@@ -38,17 +40,6 @@
     outline-offset: 3px;
     border-radius: 4px;
   }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
-  }
 }
 
 @layer components {
@@ -56,12 +47,289 @@
     @apply font-mono text-xs uppercase tracking-[0.18em] text-accent;
   }
   .card {
-    @apply rounded-xl border border-line bg-surface p-6 transition-colors duration-150;
+    @apply relative isolate rounded-xl border border-line bg-surface p-6 transition duration-200;
   }
   .card:hover {
     border-color: var(--color-line-strong);
+    transform: translateY(-2px);
+  }
+  /* Luz que segue o ponteiro (posição vinda de fx.ts) */
+  .card::before,
+  [data-spot]::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    background: radial-gradient(
+      260px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklab, var(--color-accent) 14%, transparent),
+      transparent 65%
+    );
+  }
+  .card:hover::before,
+  [data-spot]:hover::before {
+    opacity: 1;
   }
   .chip {
     @apply rounded-md border border-line bg-surface-2 px-2.5 py-1 font-mono text-xs text-muted;
+  }
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition;
+  }
+  .btn-solid {
+    @apply bg-fg text-bg hover:opacity-90;
+  }
+  .btn-outline {
+    @apply border border-line-strong hover:bg-surface;
+  }
+
+  /* Grade discreta com brilho de ardósia, usada no topo da página */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, color-mix(in oklab, var(--color-line) 55%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in oklab, var(--color-line) 55%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 70% 60% at 65% 30%, #000 20%, transparent 75%);
+  }
+  .glow {
+    background: radial-gradient(
+      ellipse 50% 45% at 70% 25%,
+      color-mix(in oklab, var(--color-accent) 16%, transparent),
+      transparent 70%
+    );
+  }
+
+  .cursor::after {
+    content: '';
+    display: inline-block;
+    width: 0.55ch;
+    height: 1.05em;
+    margin-left: 0.25ch;
+    vertical-align: -0.15em;
+    background: var(--color-accent);
+    animation: blink 1.1s steps(1) infinite;
+  }
+  .live-dot {
+    position: relative;
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 9999px;
+    background: var(--color-live);
+  }
+  .live-dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--color-live);
+    animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  }
+}
+
+/* Entrada ao rolar. Sem JavaScript, tudo aparece normalmente. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+  transition-delay: var(--d, 0ms);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .cursor::after,
+  .live-dot::after {
+    animation: none;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
+
+/* ---------- Efeitos de página ---------- */
+
+/* Transição suave entre páginas (navegadores com suporte; os demais navegam normalmente) */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: 0.18s ease both vt-out;
+}
+::view-transition-new(root) {
+  animation: 0.28s ease both vt-in;
+}
+@keyframes vt-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-in {
+  from {
+    opacity: 0;
+  }
+}
+
+#progress {
+  transform: scaleX(var(--p, 0));
+  transform-origin: left;
+}
+
+/* Contornos topográficos que giram devagar atrás do hero */
+.topo {
+  animation: drift 160s linear infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+.topo-wrap {
+  transform: translate3d(var(--mx-shift, 0), var(--my-shift, 0), 0);
+  transition: transform 0.4s ease-out;
+}
+@keyframes drift {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Camadas de serra com parallax por rolagem */
+.ridge {
+  transform: translate3d(0, calc(var(--py, 0px) * -1), 0);
+  will-change: transform;
+}
+
+/* Vapor do café */
+.steam path {
+  stroke-dasharray: 60;
+  stroke-dashoffset: 60;
+  opacity: 0;
+  animation: steam 3.4s ease-in-out infinite;
+}
+.steam path:nth-child(2) {
+  animation-delay: 0.9s;
+}
+.steam path:nth-child(3) {
+  animation-delay: 1.8s;
+}
+@keyframes steam {
+  0% {
+    stroke-dashoffset: 60;
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  35% {
+    opacity: 0.85;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* Linha do tempo que se desenha */
+[data-timeline] {
+  --tl: 0;
+}
+[data-timeline] .tl-line {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--color-accent), var(--color-accent));
+  transform-origin: top;
+  transform: scaleY(var(--tl));
+}
+[data-tl-item] .tl-dot {
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+  background: var(--color-line-strong);
+}
+[data-tl-item].is-lit .tl-dot {
+  background: var(--color-accent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent) 22%, transparent);
+  transform: scale(1.15);
+}
+[data-tl-item] .tl-body {
+  opacity: 0.45;
+  transition: opacity 0.4s ease;
+}
+[data-tl-item].is-lit .tl-body {
+  opacity: 1;
+}
+
+/* Brilho que passa pelo selo de certificação */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.1) 50%, transparent 65%);
+  transform: translateX(-120%);
+}
+.shine:hover::after {
+  transition: transform 0.9s ease;
+  transform: translateX(120%);
+}
+
+/* Foto com leve inclinação */
+[data-tilt] {
+  transition: transform 0.25s ease-out;
+  transform-style: preserve-3d;
+}
+
+/* Altímetro da página de montanhas */
+.alt-marker {
+  bottom: calc(var(--alt, 0) * 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .topo,
+  .steam path {
+    animation: none;
+  }
+  .steam path {
+    opacity: 0.5;
+    stroke-dashoffset: 0;
+  }
+  [data-tl-item] .tl-body {
+    opacity: 1;
+  }
+  .ridge {
+    transform: none;
   }
 }

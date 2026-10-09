@@ -1,15 +1,21 @@
 ---
-import { getAbsoluteLocaleUrl } from 'astro:i18n';
 import { locales, useTranslations, type Locale } from '../i18n';
+import { pageUrl, type PageId } from '../i18n/routes';
 import '../styles/global.css';
 
 interface Props {
   locale: Locale;
+  page?: PageId;
+  title?: string;
+  description?: string;
 }
 
-const { locale } = Astro.props;
+const { locale, page = 'home' } = Astro.props;
 const t = useTranslations(locale);
-const canonical = getAbsoluteLocaleUrl(locale);
+const title = Astro.props.title ?? t.meta.title;
+const description = Astro.props.description ?? t.meta.description;
+const abs = (l: Locale) => new URL(pageUrl(l, page), Astro.site).href;
+const canonical = abs(locale);
 const ogImage = new URL('/og.svg', Astro.site).href;
 ---
 
@@ -19,24 +25,27 @@ const ogImage = new URL('/og.svg', Astro.site).href;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#0d0f12" />
-    <title>{t.meta.title}</title>
-    <meta name="description" content={t.meta.description} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    {
-      locales.map((l) => (
-        <link rel="alternate" hreflang={useTranslations(l).htmlLang} href={getAbsoluteLocaleUrl(l)} />
-      ))
-    }
-    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl('pt')} />
+    {locales.map((l) => <link rel="alternate" hreflang={useTranslations(l).htmlLang} href={abs(l)} />)}
+    <link rel="alternate" hreflang="x-default" href={abs('pt')} />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={t.meta.title} />
-    <meta property="og:description" content={t.meta.description} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImage} />
     <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body>
+    <div id="progress" class="fixed inset-x-0 top-0 z-[60] h-0.5 bg-accent" aria-hidden="true"></div>
     <slot />
+    <script>
+      import '../scripts/fx';
+    </script>
   </body>
 </html>
