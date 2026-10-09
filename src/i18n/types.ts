@@ -41,15 +41,24 @@ export interface Dict {
     ctaProjects: string;
     ctaContact: string;
   };
+  about: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    cardTitle: string;
+    facts: { label: string; value: string }[];
+  };
   principles: { eyebrow: string; title: string; cards: [TitleText, TitleText, TitleText] };
   journey: {
     eyebrow: string;
     title: string;
-    blocks: [TitleText, TitleText, TitleText];
-    timelineTitle: string;
-    timeline: { when: string; title: string; text: string }[];
+    stepLabel: string;
+    tookLabel: string;
+    prev: string;
+    next: string;
+    steps: { when: string; title: string; text: string; took: string[] }[];
   };
-  engineering: { eyebrow: string; title: string; pillars: [TitleText, TitleText, TitleText] };
+  engineering: { eyebrow: string; title: string; pillars: TitleText[] };
   stack: {
     eyebrow: string;
     title: string;
@@ -75,9 +84,10 @@ export interface Dict {
     eyebrow: string;
     title: string;
     lead: string;
-    items: { degree: string; institution: string; focus: string }[];
+    items: { degree: string; institution: string; period: string; focus: string }[];
     certLabel: string;
     certName: string;
+    certNote: string;
     learningTitle: string;
     learning: string[];
   };

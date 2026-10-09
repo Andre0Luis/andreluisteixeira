@@ -15,7 +15,6 @@ function onScroll() {
     bar?.style.setProperty('--p', String(p));
     document.documentElement.style.setProperty('--scroll', String(scrollY));
     updateAltimeter(p);
-    updateTimeline();
   });
 }
 addEventListener('scroll', onScroll, { passive: true });
@@ -146,19 +145,6 @@ function updateAltimeter(p: number) {
   const text = value.toLocaleString(altimeter.dataset.locale || undefined);
   altimeter.querySelectorAll<HTMLElement>('[data-alt-value]').forEach((out) => (out.textContent = text));
   altimeter.style.setProperty('--alt', String(p));
-}
-
-/* Linha do tempo que se desenha com a rolagem */
-const timeline = document.querySelector<HTMLElement>('[data-timeline]');
-function updateTimeline() {
-  if (!timeline) return;
-  const r = timeline.getBoundingClientRect();
-  const p = Math.min(1, Math.max(0, (innerHeight * 0.6 - r.top) / r.height));
-  timeline.style.setProperty('--tl', String(p));
-  timeline.querySelectorAll<HTMLElement>('[data-tl-item]').forEach((li) => {
-    const lr = li.getBoundingClientRect();
-    li.classList.toggle('is-lit', lr.top < innerHeight * 0.62);
-  });
 }
 
 onScroll();

@@ -3,6 +3,7 @@ import Base from '../layouts/Base.astro';
 import Header from './Header.astro';
 import Hero from './Hero.astro';
 import CardGrid from './CardGrid.astro';
+import AboutMe from './AboutMe.astro';
 import Journey from './Journey.astro';
 import Engineering from './Engineering.astro';
 import Stack from './Stack.astro';
@@ -36,6 +37,8 @@ const ex = extras[locale];
 
   <main id="main">
     <Hero locale={locale} />
+
+    <AboutMe locale={locale} />
 
     <CardGrid
       id="principles"

@@ -19,6 +19,7 @@ const { education } = useTranslations(locale);
         education.items.map((item, i) => (
           <article class="card reveal" style={`--d: ${i * 80}ms`}>
             <p class="font-mono text-sm text-accent">{item.institution}</p>
+            <p class="mt-1 font-mono text-xs text-muted">{item.period}</p>
             <h3 class="mt-3 text-lg font-semibold tracking-tight">{item.degree}</h3>
             <p class="mt-3 text-muted">{item.focus}</p>
           </article>
@@ -36,6 +37,7 @@ const { education } = useTranslations(locale);
         <div>
           <p class="eyebrow">{education.certLabel}</p>
           <p class="mt-1 text-lg font-semibold tracking-tight">{education.certName}</p>
+          <p class="mt-1 text-xs text-muted">{education.certNote}</p>
         </div>
       </div>
 

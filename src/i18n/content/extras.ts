@@ -53,7 +53,7 @@ export const extras: Record<Locale, Extras> = {
       lines: [
         { cmd: 'whoami', out: 'André Luis Teixeira' },
         { cmd: 'cargo', out: 'Engenheiro de Plataforma @ Santander' },
-        { cmd: 'foco', out: 'ci/cd · automação · resiliência' },
+        { cmd: 'foco', out: 'ci/cd · automação · ia · system design' },
         { cmd: 'lema', out: 'every second counts' },
       ],
     },
@@ -156,7 +156,7 @@ export const extras: Record<Locale, Extras> = {
       lines: [
         { cmd: 'whoami', out: 'André Luis Teixeira' },
         { cmd: 'role', out: 'Platform Engineer @ Santander' },
-        { cmd: 'focus', out: 'ci/cd · automation · resilience' },
+        { cmd: 'focus', out: 'ci/cd · automation · ai · system design' },
         { cmd: 'motto', out: 'every second counts' },
       ],
     },
@@ -259,7 +259,7 @@ export const extras: Record<Locale, Extras> = {
       lines: [
         { cmd: 'whoami', out: 'André Luis Teixeira' },
         { cmd: 'cargo', out: 'Ingeniero de Plataforma @ Santander' },
-        { cmd: 'foco', out: 'ci/cd · automatización · resiliencia' },
+        { cmd: 'foco', out: 'ci/cd · automatización · ia · system design' },
         { cmd: 'lema', out: 'every second counts' },
       ],
     },

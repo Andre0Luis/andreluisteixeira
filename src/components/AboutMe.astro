@@ -1,0 +1,43 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { about } = useTranslations(locale);
+---
+
+<section id="about-me" class="border-t border-line py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <SectionHead eyebrow={about.eyebrow} title={about.title} />
+
+    <div class="grid gap-12 lg:grid-cols-[1.35fr_1fr]">
+      <div class="space-y-5">
+        {
+          about.paragraphs.map((p, i) => (
+            <p class:list={['reveal text-lg leading-relaxed', i === 0 ? 'text-fg' : 'text-muted']} style={`--d: ${i * 70}ms`}>
+              {p}
+            </p>
+          ))
+        }
+      </div>
+
+      <aside class="reveal self-start rounded-2xl border border-line bg-surface p-6 lg:sticky lg:top-24" style="--d: 120ms" data-spot>
+        <p class="eyebrow">{about.cardTitle}</p>
+        <dl class="mt-5 divide-y divide-line">
+          {
+            about.facts.map((f) => (
+              <div class="py-3 first:pt-0 last:pb-0">
+                <dt class="font-mono text-[11px] uppercase tracking-[0.16em] text-muted">{f.label}</dt>
+                <dd class="mt-1 text-sm leading-relaxed text-fg">{f.value}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </aside>
+    </div>
+  </div>
+</section>

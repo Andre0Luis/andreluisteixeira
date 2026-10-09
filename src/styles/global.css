@@ -255,38 +255,15 @@
   }
 }
 
-/* Linha do tempo que se desenha */
-[data-timeline] {
-  --tl: 0;
+/* Fluxo nos diagramas de pilares */
+.flow path {
+  stroke-dasharray: 5 9;
+  animation: flow 1.4s linear infinite;
 }
-[data-timeline] .tl-line {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-  height: 100%;
-  background: linear-gradient(to bottom, var(--color-accent), var(--color-accent));
-  transform-origin: top;
-  transform: scaleY(var(--tl));
-}
-[data-tl-item] .tl-dot {
-  transition:
-    background-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.3s ease;
-  background: var(--color-line-strong);
-}
-[data-tl-item].is-lit .tl-dot {
-  background: var(--color-accent);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--color-accent) 22%, transparent);
-  transform: scale(1.15);
-}
-[data-tl-item] .tl-body {
-  opacity: 0.45;
-  transition: opacity 0.4s ease;
-}
-[data-tl-item].is-lit .tl-body {
-  opacity: 1;
+@keyframes flow {
+  to {
+    stroke-dashoffset: -28;
+  }
 }
 
 /* Brilho que passa pelo selo de certificação */
@@ -326,8 +303,8 @@
     opacity: 0.5;
     stroke-dashoffset: 0;
   }
-  [data-tl-item] .tl-body {
-    opacity: 1;
+  .flow path {
+    animation: none;
   }
   .ridge {
     transform: none;
