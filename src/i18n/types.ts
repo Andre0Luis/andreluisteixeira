@@ -98,4 +98,11 @@ export interface Dict {
     emailLabel: string;
   };
   footer: string;
+  built: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    items: { id: 'astro' | 'vue' | 'typescript' | 'tailwind' | 'claude' | 'github'; name: string; role: string }[];
+    repoLabel: string;
+  };
 }

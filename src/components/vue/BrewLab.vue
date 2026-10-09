@@ -58,9 +58,10 @@ onBeforeUnmount(stop);
 
 const stats = computed(() => [
   { label: props.t.water, value: `${water.value} ml` },
-  { label: props.t.ratio, value: `1:${m.value.ratio}` },
+  { label: props.t.ratio, value: `${m.value.ratio}:1` },
   { label: props.t.temp, value: m.value.temp },
   { label: props.t.grind, value: m.value.grind },
+  ...(m.value.roast ? [{ label: props.t.roast, value: m.value.roast }] : []),
   { label: props.t.time, value: clock(m.value.total) },
 ]);
 </script>
@@ -104,7 +105,14 @@ const stats = computed(() => [
             </template>
           </svg>
           <span>
-            <span class="block font-medium">{{ me.name }}</span>
+            <span class="flex flex-wrap items-center gap-2 font-medium">
+              {{ me.name }}
+              <span
+                v-if="me.badge"
+                class="rounded-full border border-accent/50 bg-accent/10 px-2 py-0.5 font-mono text-[10px] font-normal text-accent"
+                >{{ me.badge }}</span
+              >
+            </span>
             <span class="mt-0.5 hidden text-xs leading-snug text-muted sm:block">{{ me.tagline }}</span>
           </span>
         </span>

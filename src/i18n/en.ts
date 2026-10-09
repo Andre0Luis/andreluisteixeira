@@ -330,6 +330,23 @@ export const en: Dict = {
     text: 'Open to conversations about platform engineering, resilient architecture, automation pipelines, or mountaineering and specialty coffee.',
     emailLabel: 'Email',
   },
-  footer:
-    '© André Luis Teixeira. Every second counts. Built with Astro, Vue 3 and TypeScript.',
+  footer: '© André Luis Teixeira. Every second counts.',
+  built: {
+    eyebrow: 'How it was built',
+    title: 'Inside this site',
+    paragraphs: [
+      'Every technology on this site was hand-picked, thinking about fast loading, working well on any screen and being simple to maintain.',
+      'The code was written with the help of a generative AI, Claude, by Anthropic, who gets the credit for the construction. The architecture, the decisions and the rules that guided the code were dictated by me.',
+      'The source code lives on GitHub, and that is where the site is published from, through GitHub Pages.',
+    ],
+    items: [
+      { id: 'astro', name: 'Astro', role: 'Fast static pages, with JavaScript only where it is needed.' },
+      { id: 'vue', name: 'Vue 3', role: 'The interactive components: pipeline, journey path and coffee lab.' },
+      { id: 'typescript', name: 'TypeScript', role: 'Typed code, with all three languages checked by the compiler.' },
+      { id: 'tailwind', name: 'Tailwind CSS', role: 'Dark theme, layout and responsiveness.' },
+      { id: 'claude', name: 'Claude', role: 'Wrote the code, following my architecture and my rules.' },
+      { id: 'github', name: 'GitHub Pages', role: 'Source code and site hosting.' },
+    ],
+    repoLabel: 'See the code on GitHub',
+  },
 };

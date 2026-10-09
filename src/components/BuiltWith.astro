@@ -1,0 +1,79 @@
+---
+import {
+  siAstro,
+  siClaude,
+  siGithub,
+  siTailwindcss,
+  siTypescript,
+  siVuedotjs,
+} from 'simple-icons';
+import { useTranslations, type Locale } from '../i18n';
+import { urls } from '../i18n/urls';
+import SectionHead from './SectionHead.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { built } = useTranslations(locale);
+
+const icons = {
+  astro: siAstro,
+  vue: siVuedotjs,
+  typescript: siTypescript,
+  tailwind: siTailwindcss,
+  claude: siClaude,
+  github: siGithub,
+};
+---
+
+<section id="built" class="border-t border-line py-20">
+  <div class="mx-auto max-w-6xl px-5">
+    <SectionHead eyebrow={built.eyebrow} title={built.title} />
+
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr]">
+      <div class="space-y-5">
+        {
+          built.paragraphs.map((p, i) => (
+            <p class:list={['reveal leading-relaxed', i === 0 ? 'text-lg text-fg' : 'text-muted']} style={`--d: ${i * 80}ms`}>
+              {p}
+            </p>
+          ))
+        }
+        <a
+          href={urls.repo}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reveal inline-flex items-center gap-2 font-mono text-sm text-accent underline-offset-4 hover:underline"
+          style="--d: 240ms"
+        >
+          {built.repoLabel} <span aria-hidden="true">&nearr;</span>
+        </a>
+      </div>
+
+      <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          built.items.map((item, i) => {
+            const icon = icons[item.id];
+            return (
+              <li class="card reveal" style={`--d: ${i * 70}ms`}>
+                <svg
+                  viewBox="0 0 24 24"
+                  class="size-8 text-fg"
+                  fill="currentColor"
+                  role="img"
+                  aria-label={icon.title}
+                >
+                  <path d={icon.path} />
+                </svg>
+                <p class="mt-4 font-medium">{item.name}</p>
+                <p class="mt-1.5 text-sm leading-relaxed text-muted">{item.role}</p>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </div>
+</section>

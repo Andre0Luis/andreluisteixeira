@@ -22,6 +22,13 @@ const coffeeColor = computed(() => {
   return `rgb(${mix(196, 52)}, ${mix(138, 28)}, ${mix(64, 16)})`;
 });
 
+// Preferência: equilibrado, puxando para a acidez mais elevada (um pouco menos de tempo e temperatura).
+function applyPreset() {
+  grind.value = 50;
+  time.value = 40;
+  temp.value = 45;
+}
+
 const sliders = computed(() => [
   { key: 'grind' as const, model: grind, label: props.t.sliders.grind },
   { key: 'time' as const, model: time, label: props.t.sliders.time },
@@ -32,6 +39,13 @@ const sliders = computed(() => [
 <template>
   <div class="grid gap-6 rounded-2xl border border-line bg-surface p-5 sm:p-7 lg:grid-cols-[1fr_minmax(0,21rem)]" data-spot>
     <div class="space-y-6">
+      <button
+        type="button"
+        class="rounded-lg border border-accent/50 bg-accent/10 px-4 py-2 text-sm text-fg transition hover:bg-accent/20"
+        @click="applyPreset"
+      >
+        {{ t.preset }}
+      </button>
       <div v-for="s in sliders" :key="s.key">
         <label class="flex items-baseline justify-between font-mono text-xs uppercase tracking-[0.18em] text-accent" :for="`ex-${s.key}`">
           {{ s.label[0] }}

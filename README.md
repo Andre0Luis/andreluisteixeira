@@ -42,9 +42,20 @@ public/                   favicon, og.svg
 - **Desempenho.** Só as ilhas Vue carregam JavaScript, e só quando entram na tela (`client:visible`). Os efeitos globais somam um único script pequeno, e as animações respeitam quem desativa movimento no sistema. Fontes são locais (Inter e JetBrains Mono).
 - **Tema.** Dark mode nativo. Cores e fontes são tokens em `src/styles/global.css`; não escreva cores soltas nos componentes.
 
+## Publicação (GitHub Pages)
+
+O deploy é feito pelo workflow `.github/workflows/deploy.yml`, a cada push no `main`.
+
+Para ligar pela primeira vez, no repositório: **Settings > Pages > Build and deployment > Source: GitHub Actions**
+(ou `gh api -X POST repos/Andre0Luis/andreluisteixeira/pages -f build_type=workflow`).
+
+O workflow lê o endereço do site na configuração do repositório e o repassa ao build pelas variáveis `SITE` e `BASE`:
+com domínio próprio (Settings > Pages > Custom domain) o site fica na raiz; sem ele, em `andre0luis.github.io/andreluisteixeira`.
+Para testar localmente com caminho base: `SITE=https://andre0luis.github.io BASE=/andreluisteixeira npm run build`.
+
 ## Pendências
 
 - Trocar `public/og.svg` por uma imagem PNG 1200x630: a maioria das redes sociais não exibe SVG como prévia.
 - Receitas da página de Café (`src/i18n/content/coffee.ts`): são valores de referência. Trocar pelas receitas pessoais.
 - Página de Montanhas: incluir o diário dos 14 cumes de 2026 (nome, data, altitude, foto).
-- Definir onde publicar (GitHub Pages, Vercel ou Netlify).
+- Habilitar o GitHub Pages no repositório (veja Publicação) e, se for usar, apontar o domínio andreluisteixeira.dev.

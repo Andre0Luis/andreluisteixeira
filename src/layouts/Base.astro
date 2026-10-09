@@ -16,7 +16,8 @@ const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
 const abs = (l: Locale) => new URL(pageUrl(l, page), Astro.site).href;
 const canonical = abs(locale);
-const ogImage = new URL('/og.svg', Astro.site).href;
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+const ogImage = new URL(`${baseUrl}/og.svg`, Astro.site).href;
 ---
 
 <!doctype html>
@@ -28,7 +29,7 @@ const ogImage = new URL('/og.svg', Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={`${baseUrl}/favicon.svg`} />
     {locales.map((l) => <link rel="alternate" hreflang={useTranslations(l).htmlLang} href={abs(l)} />)}
     <link rel="alternate" hreflang="x-default" href={abs('pt')} />
     <meta property="og:type" content="website" />

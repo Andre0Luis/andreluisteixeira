@@ -330,6 +330,23 @@ export const es: Dict = {
     text: 'Abierto a intercambiar ideas sobre ingeniería de plataforma, arquitectura resiliente, pipelines de automatización, o a conversar sobre montañismo y café de especialidad.',
     emailLabel: 'Correo',
   },
-  footer:
-    '© André Luis Teixeira. Every second counts. Desarrollado con Astro, Vue 3 y TypeScript.',
+  footer: '© André Luis Teixeira. Every second counts.',
+  built: {
+    eyebrow: 'Cómo se construyó',
+    title: 'Por dentro de este sitio',
+    paragraphs: [
+      'Cada tecnología de este sitio fue elegida a mano, pensando en que cargue rápido, funcione bien en cualquier pantalla y sea simple de mantener.',
+      'El código fue escrito con la ayuda de una IA generativa, Claude, de Anthropic, a quien doy el crédito por la construcción. La arquitectura, las decisiones y las reglas que guiaron el código las dicté yo.',
+      'El código fuente está en GitHub, y desde allí se publica el sitio, a través de GitHub Pages.',
+    ],
+    items: [
+      { id: 'astro', name: 'Astro', role: 'Páginas estáticas y rápidas, con JavaScript solo donde hace falta.' },
+      { id: 'vue', name: 'Vue 3', role: 'Los componentes interactivos: pipeline, recorrido y laboratorio de café.' },
+      { id: 'typescript', name: 'TypeScript', role: 'Código tipado, con los tres idiomas revisados por el compilador.' },
+      { id: 'tailwind', name: 'Tailwind CSS', role: 'Tema oscuro, diseño y responsividad.' },
+      { id: 'claude', name: 'Claude', role: 'Escribió el código, siguiendo mi arquitectura y mis reglas.' },
+      { id: 'github', name: 'GitHub Pages', role: 'Código fuente y alojamiento del sitio.' },
+    ],
+    repoLabel: 'Ver el código en GitHub',
+  },
 };

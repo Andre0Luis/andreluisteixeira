@@ -24,5 +24,5 @@ export const links = {
   github: urls.github,
   linkedin: urls.linkedin,
   instagram: urls.instagram,
-  email: 'contato@andreluisteixeira.dev',
+  email: 'andre_luis.t@hotmail.com',
 } as const;

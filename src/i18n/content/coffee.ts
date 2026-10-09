@@ -9,12 +9,25 @@ export interface BrewMethod {
   grind: string;
   total: number;
   steps: { at: number; text: string }[];
+  badge?: string;
+  roast?: string;
 }
 
 export interface CoffeePage {
   meta: { title: string; description: string };
   hero: { eyebrow: string; title: string; lead: string; chips: string[] };
   stats: { to: number; label: string }[];
+  favorite: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    specs: { label: string; value: string }[];
+    note: string;
+    secondLabel: string;
+    secondName: string;
+    secondText: string;
+    cta: string;
+  };
   lab: {
     eyebrow: string;
     title: string;
@@ -25,6 +38,7 @@ export interface CoffeePage {
     ratio: string;
     temp: string;
     grind: string;
+    roast: string;
     time: string;
     start: string;
     pause: string;
@@ -48,6 +62,7 @@ export interface CoffeePage {
     };
     scoreLabel: string;
     note: string;
+    preset: string;
   };
   app: { eyebrow: string; title: string; text: string; cta: string };
   cta: { title: string; text: string; mountains: string };
@@ -70,6 +85,23 @@ export const coffee: Record<Locale, CoffeePage> = {
       { to: 4, label: 'métodos de preparo' },
       { to: 3, label: 'variáveis que eu estudo: moagem, tempo e temperatura' },
     ],
+    favorite: {
+      eyebrow: 'Meu favorito',
+      title: 'O café que eu mais gosto',
+      lead: 'Gosto de café com acidez mais elevada: vivo, aromático e cheio de nuances. Esta é a receita que eu mais repito.',
+      specs: [
+        { label: 'Método', value: 'Hario V60' },
+        { label: 'Moagem', value: 'Média' },
+        { label: 'Torra', value: 'Média' },
+        { label: 'Proporção', value: '16:1' },
+        { label: 'Perfil', value: 'Acidez mais elevada' },
+      ],
+      note: '16:1 quer dizer 16 partes de água para 1 de café. Com 18 g de café, são 288 ml de água.',
+      secondLabel: 'Em segundo lugar',
+      secondName: 'AeroPress',
+      secondText: 'Depois do V60, é o meu favorito: rápido, versátil e difícil de errar.',
+      cta: 'Montar no laboratório',
+    },
     lab: {
       eyebrow: 'Laboratório',
       title: 'Monte uma receita',
@@ -80,6 +112,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       ratio: 'Proporção',
       temp: 'Temperatura',
       grind: 'Moagem',
+      roast: 'Torra',
       time: 'Tempo total',
       start: 'Iniciar',
       pause: 'Pausar',
@@ -93,10 +126,12 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'v60',
           name: 'Hario V60',
+          badge: 'Favorito',
+          roast: 'Média',
           tagline: 'Filtrado, limpo e cheio de nuances.',
           ratio: 16,
           temp: '92 a 96 °C',
-          grind: 'Média-fina',
+          grind: 'Média',
           total: 180,
           steps: [
             { at: 0, text: 'Bloom: despeje o dobro da dose em água e espere o café respirar.' },
@@ -138,6 +173,7 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'aeropress',
           name: 'AeroPress',
+          badge: '2º favorito',
           tagline: 'Rápido, versátil e difícil de errar.',
           ratio: 15,
           temp: '85 a 92 °C',
@@ -176,6 +212,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       },
       scoreLabel: 'Extração',
       note: 'Regra de bolso para brincar, não ciência exata.',
+      preset: 'Minha preferência: acidez mais elevada',
     },
     app: {
       eyebrow: 'Quando o café vira código',
@@ -206,6 +243,23 @@ export const coffee: Record<Locale, CoffeePage> = {
       { to: 4, label: 'brewing methods' },
       { to: 3, label: 'variables I study: grind, time and temperature' },
     ],
+    favorite: {
+      eyebrow: 'My favorite',
+      title: 'The coffee I like best',
+      lead: 'I like coffee with higher acidity: bright, aromatic and full of nuance. This is the recipe I repeat the most.',
+      specs: [
+        { label: 'Method', value: 'Hario V60' },
+        { label: 'Grind', value: 'Medium' },
+        { label: 'Roast', value: 'Medium' },
+        { label: 'Ratio', value: '16:1' },
+        { label: 'Profile', value: 'Higher acidity' },
+      ],
+      note: '16:1 means 16 parts water to 1 part coffee. With 18 g of coffee, that is 288 ml of water.',
+      secondLabel: 'In second place',
+      secondName: 'AeroPress',
+      secondText: 'After the V60, it is my favorite: fast, versatile and hard to get wrong.',
+      cta: 'Build it in the lab',
+    },
     lab: {
       eyebrow: 'Lab',
       title: 'Build a recipe',
@@ -216,6 +270,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       ratio: 'Ratio',
       temp: 'Temperature',
       grind: 'Grind',
+      roast: 'Roast',
       time: 'Total time',
       start: 'Start',
       pause: 'Pause',
@@ -229,10 +284,12 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'v60',
           name: 'Hario V60',
+          badge: 'Favorite',
+          roast: 'Medium',
           tagline: 'Filtered, clean and full of nuance.',
           ratio: 16,
           temp: '92 to 96 °C',
-          grind: 'Medium-fine',
+          grind: 'Medium',
           total: 180,
           steps: [
             { at: 0, text: 'Bloom: pour twice the dose in water and let the coffee breathe.' },
@@ -274,6 +331,7 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'aeropress',
           name: 'AeroPress',
+          badge: '2nd favorite',
           tagline: 'Fast, versatile and hard to get wrong.',
           ratio: 15,
           temp: '85 to 92 °C',
@@ -312,6 +370,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       },
       scoreLabel: 'Extraction',
       note: 'A rule of thumb to play with, not exact science.',
+      preset: 'My preference: higher acidity',
     },
     app: {
       eyebrow: 'When coffee becomes code',
@@ -342,6 +401,23 @@ export const coffee: Record<Locale, CoffeePage> = {
       { to: 4, label: 'métodos de preparación' },
       { to: 3, label: 'variables que estudio: molienda, tiempo y temperatura' },
     ],
+    favorite: {
+      eyebrow: 'Mi favorito',
+      title: 'El café que más me gusta',
+      lead: 'Me gusta el café con acidez más elevada: vivo, aromático y lleno de matices. Es la receta que más repito.',
+      specs: [
+        { label: 'Método', value: 'Hario V60' },
+        { label: 'Molienda', value: 'Media' },
+        { label: 'Tueste', value: 'Medio' },
+        { label: 'Proporción', value: '16:1' },
+        { label: 'Perfil', value: 'Acidez más elevada' },
+      ],
+      note: '16:1 significa 16 partes de agua por 1 de café. Con 18 g de café, son 288 ml de agua.',
+      secondLabel: 'En segundo lugar',
+      secondName: 'AeroPress',
+      secondText: 'Después del V60, es mi favorito: rápido, versátil y difícil de fallar.',
+      cta: 'Armarlo en el laboratorio',
+    },
     lab: {
       eyebrow: 'Laboratorio',
       title: 'Arma una receta',
@@ -352,6 +428,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       ratio: 'Proporción',
       temp: 'Temperatura',
       grind: 'Molienda',
+      roast: 'Tueste',
       time: 'Tiempo total',
       start: 'Iniciar',
       pause: 'Pausar',
@@ -365,10 +442,12 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'v60',
           name: 'Hario V60',
+          badge: 'Favorito',
+          roast: 'Medio',
           tagline: 'Filtrado, limpio y lleno de matices.',
           ratio: 16,
           temp: '92 a 96 °C',
-          grind: 'Media-fina',
+          grind: 'Media',
           total: 180,
           steps: [
             { at: 0, text: 'Bloom: vierte el doble de la dosis en agua y deja que el café respire.' },
@@ -410,6 +489,7 @@ export const coffee: Record<Locale, CoffeePage> = {
         {
           id: 'aeropress',
           name: 'AeroPress',
+          badge: '2.º favorito',
           tagline: 'Rápido, versátil y difícil de fallar.',
           ratio: 15,
           temp: '85 a 92 °C',
@@ -448,6 +528,7 @@ export const coffee: Record<Locale, CoffeePage> = {
       },
       scoreLabel: 'Extracción',
       note: 'Una regla práctica para jugar, no ciencia exacta.',
+      preset: 'Mi preferencia: acidez más elevada',
     },
     app: {
       eyebrow: 'Cuando el café se vuelve código',
